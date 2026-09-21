@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RailEase · train booking</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Font: Inter (clean, modern) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(145deg, #f5f9ff 0%, #e6f0fa 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      color: #1e2b3a;
+    }
+
+    .booking-card {
+      max-width: 1080px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 2.5rem;
+      box-shadow: 
+        0 25px 50px -10px rgba(0, 30, 60, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+        0 0 40px rgba(140, 180, 240, 0.2);
+      padding: 2rem 2rem 2rem 2rem;
+      transition: all 0.2s ease;
+    }
+
+    /* header */
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .logo-icon {
+      background: #1e4f8a;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px -6px rgba(20, 80, 150, 0.3);
+    }
+
+    .logo-icon i {
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .logo-text {
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #0b2b4e;
+    }
+
+    .logo-text span {
+      color: #2d6bb8;
+      font-weight: 600;
+    }
+
+    /* main layout: form left, visual right */
+    .booking-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 2rem;
+    }
+
+    /* form side */
+    .form-section {
+      background: white;
+      border-radius: 1.8rem;
+      padding: 1.8rem 1.8rem 2rem 1.8rem;
+      box-shadow: 0 10px 25px -8px rgba(0, 20, 40, 0.08);
+      border: 1px solid rgba(210, 225, 245, 0.6);
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1b3a5e;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title i {
+      color: #3f7bc0;
+      font-size: 1rem;
+      background: #e9f2fe;
+      padding: 0.4rem;
+      border-radius: 10px;
+    }
+
+    /* input groups */
+    .input-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: #5b7899;
+      margin-bottom: 0.4rem;
+    }
+
+    .input-field {
+      display: flex;
+      align-items: center;
+      background: #f7fafd;
+      border-radius: 1rem;
+      padding: 0.1rem 0.1rem 0.1rem 1rem;
+      border: 1.5px solid #d9e5f2;
+      transition: all 0.2s;
+    }
+
+    .input-field:focus-within {
+      border-color: #3f7bc0;
+      box-shadow: 0 0 0 4px rgba(63, 123, 192, 0.1);
+      background: white;
+    }
+
+    .input-field i {
+      color: #7b98bb;
+      font-size: 1rem;
+      width: 1.4rem;
+    }
+
+    .input-field input, 
+    .input-field select {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 0.85rem 0.8rem 0.85rem 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #11273e;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      width: 100%;
+    }
+
+    .input-field select {
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237b98bb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.8rem center;
+      background-size: 1rem;
+    }
+
+    .input-field input::placeholder {
+      color: #9ab2cf;
+      font-weight: 400;
+    }
+
+    /* date row */
+    .date-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    /* passenger + class row */
+    .passenger-class-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    /* CTA button */
+    .book-btn {
+      width: 100%;
+      background: #1e4f8a;
+      background: linear-gradient(135deg, #1e4f8a 0%, #2b6ab3 100%);
+      border: none;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 12px 25px -8px #1e4f8a80;
+      letter-spacing: 0.01em;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .book-btn i {
+      font-size: 1.1rem;
+      transition: transform 0.2s;
+    }
+
+    .book-btn:hover {
+      background: linear-gradient(135deg, #164279 0%, #225b9e 100%);
+      box-shadow: 0 18px 30px -10px #1e4f8acc;
+      transform: translateY(-2px);
+    }
+
+    .book-btn:hover i {
+      transform: translateX(4px);
+    }
+
+    .book-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 8px 18px -6px #1e4f8a;
+    }
+
+    /* right panel – visual / info */
+    .info-panel {
+      background: linear-gradient(145deg, #f0f6fe 0%, #e7f0fc 100%);
+      border-radius: 1.8rem;
+      padding: 1.8rem 1.6rem;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 10px 20px -8px rgba(30, 60, 100, 0.1);
+      height: fit-content;
+    }
+
+    .info-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .info-header i {
+      font-size: 1.4rem;
+      color: #2d6bb8;
+      background: white;
+      padding: 0.6rem;
+      border-radius: 16px;
+      box-shadow: 0 6px 12px -4px rgba(0, 30, 60, 0.1);
+    }
+
+    .info-header h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0b2b4e;
+    }
+
+    .journey-card {
+      background: white;
+      border-radius: 1.4rem;
+      padding: 1.3rem;
+      margin-bottom: 1.3rem;
+      box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.05);
+      border: 1px solid #dae7f5;
+      transition: 0.2s;
+    }
+
+    .journey-card:hover {
+      border-color: #b8d1ee;
+      box-shadow: 0 12px 18px -8px rgba(45, 107, 184, 0.15);
+    }
+
+    .journey-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      color: #345e8a;
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .journey-header i {
+      color: #7b98bb;
+      margin-right: 0.3rem;
+    }
+
+    .train-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #0c2c4b;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .train-name i {
+      color: #3f7bc0;
+      font-size: 0.9rem;
+    }
+
+    .timing-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      margin: 0.8rem 0 0.5rem;
+    }
+
+    .time-main {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #11273e;
+      letter-spacing: -0.01em;
+    }
+
+    .time-sub {
+      font-size: 0.75rem;
+      color: #7b98bb;
+      font-weight: 500;
+    }
+
+    .duration {
+      background: #f0f6fe;
+      border-radius: 30px;
+      padding: 0.25rem 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #2b6ab3;
+    }
+
+    .price-tag {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: #0b2b4e;
+      letter-spacing: -0.02em;
+    }
+
+    .price-tag span {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #6f8fb0;
+    }
+
+    .amenities {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.8rem;
+      font-size: 0.75rem;
+      color: #5b7899;
+    }
+
+    .amenities i {
+      margin-right: 0.25rem;
+      color: #4a7fc7;
+    }
+
+    /* small note */
+    .footnote {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: #6f8fb0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 500;
+    }
+
+    .footnote i {
+      color: #3f7bc0;
+    }
+
+    /* responsive */
+    @media (max-width: 850px) {
+      .booking-grid {
+        grid-template-columns: 1fr;
+      }
+      .booking-card {
+        padding: 1.5rem;
+      }
+      .logo-text {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0.8rem;
+      }
+      .booking-card {
+        padding: 1rem;
+        border-radius: 2rem;
+      }
+      .form-section {
+        padding: 1.3rem;
+      }
+      .date-row, .passenger-class-row {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+      .logo-text {
+        font-size: 1.3rem;
+      }
+      .info-panel {
+        padding: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="booking-card">
+  <!-- header -->
+  <div class="logo-section">
+    <div class="logo-icon">
+      <i class="fas fa-train"></i>
+    </div>
+    <div class="logo-text">Rail<span>Ease</span></div>
+  </div>
+
+  <!-- main grid -->
+  <div class="booking-grid">
+    <!-- LEFT: booking form -->
+    <div class="form-section">
+      <div class="section-title">
+        <i class="fas fa-pen"></i> Book your journey
+      </div>
+
+      <form id="bookingForm" onsubmit="event.preventDefault(); alert('✨ Demo: your train is ready to book!');">
+        <!-- FROM / TO -->
+        <div class="input-group">
+          <label for="from">From</label>
+          <div class="input-field">
+            <i class="fas fa-map-pin"></i>
+            <input type="text" id="from" placeholder="City or station" value="Mumbai Central" required>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="to">To</label>
+          <div class="input-field">
+            <i class="fas fa-location-dot"></i>
+            <input type="text" id="to" placeholder="City or station" value="Delhi Nizamuddin" required>
+          </div>
+        </div>
+
+        <!-- DATE ROW -->
+        <div class="date-row">
+          <div class="input-group">
+            <label for="depart">Departure</label>
+            <div class="input-field">
+              <i class="fas fa-calendar-day"></i>
+              <input type="date" id="depart" value="2025-06-15" required>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="return">Return (optional)</label>
+            <div class="input-field">
+              <i class="fas fa-calendar-check"></i>
+              <input type="date" id="return" value="2025-06-20">
+            </div>
+          </div>
+        </div>
+
+        <!-- PASSENGER / CLASS -->
+        <div class="passenger-class-row">
+          <div class="input-group">
+            <label for="passengers">Passengers</label>
+            <div class="input-field">
+              <i class="fas fa-user-group"></i>
+              <select id="passengers">
+                <option value="1">1 adult</option>
+                <option value="2" selected>2 adults</option>
+                <option value="3">3 adults</option>
+                <option value="4">4 adults</option>
+                <option value="5">5 adults</option>
+              </select>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="class">Class</label>
+            <div class="input-field">
+              <i class="fas fa-couch"></i>
+              <select id="class">
+                <option value="chair">Chair car (CC)</option>
+                <option value="sleeper" selected>Sleeper (SL)</option>
+                <option value="ac3">AC 3-tier (3A)</option>
+                <option value="ac2">AC 2-tier (2A)</option>
+                <option value="ac1">AC First class (1A)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <button type="submit" class="book-btn">
+          <i class="fas fa-ticket"></i> Search trains
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- RIGHT: visual / featured train -->
+    <div class="info-panel">
+      <div class="info-header">
+        <i class="fas fa-star"></i>
+        <h3>Recommended</h3>
+      </div>
+
+      <!-- train card 1 -->
+      <div class="journey-card">
+        <div class="journey-header">
+          <span><i class="fas fa-clock"></i> 06:15 – 22:30</span>
+          <span class="duration">16h 15m</span>
+        </div>
+        <div class="train-name">
+          <i class="fas fa-train-subway"></i> Rajdhani Express (12951)
+        </div>
+        <div class="timing-row">
+          <div>
+            <div class="time-main">Mumbai Central</div>
+            <div class="time-sub">departure</div>
+          </div>
+          <i class="fas fa-arrow-right" style="color:#b0c9e5;"></i>
+          <div style="text-align: right;">
+            <div class="time-main">Delhi Nizamuddin</div>
+            <div class="time-sub">arrival</div>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+          <div class="amenities">
+            <span><i class="fas fa-wifi"></i> WiFi</span>
+            <span><i class="fas fa-utensils"></i> Meals</span>
+          </div>
+          <div class="price-tag">₹2,450 <span>onwards</span></div>
+        </div>
+      </div>
+
+      <!-- train card 2 -->
+      <div class="journey-card">
+        <div class="journey-header">
+          <span><i class="fas fa-clock"></i> 14:00 – 06:45</span>
+          <span class="duration">16h 45m</span>
+        </div>
+        <div class="train-name">
+          <i class="fas fa-train-subway"></i> Duronto Express (12259)
+        </div>
+        <div class="timing-row">
+          <div>
+            <div class="time-main">Mumbai Central</div>
+            <div class="time-sub">departure</div>
+          </div>
+          <i class="fas fa-arrow-right" style="color:#b0c9e5;"></i>
+          <div style="text-align: right;">
+            <div class="time-main">Delhi Nizamuddin</div>
+            <div class="time-sub">arrival</div>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+          <div class="amenities">
+            <span><i class="fas fa-wifi"></i> WiFi</span>
+            <span><i class="fas fa-bed"></i> Berths</span>
+          </div>
+          <div class="price-tag">₹2,180 <span>onwards</span></div>
+        </div>
+      </div>
+
+      <!-- tiny note -->
+      <div class="footnote">
+        <i class="fas fa-shield-alt"></i> 100% secure booking · no hidden charges
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- small interactive touch: set min date for departure/return -->
+<script>
+  (function() {
+    const today = new Date().toISOString().split('T')[0];
+    const departInput = document.getElementById('depart');
+    const returnInput = document.getElementById('return');
+    if (departInput) departInput.min = today;
+    if (returnInput) returnInput.min = today;
+
+    // if departure changes, ensure return is not before departure
+    departInput?.addEventListener('change', function() {
+      if (returnInput && returnInput.value && returnInput.value < this.value) {
+        returnInput.value = this.value;
+      }
+      if (returnInput) returnInput.min = this.value;
+    });
+  })();
+</script>
+
+</body>
+</html>
